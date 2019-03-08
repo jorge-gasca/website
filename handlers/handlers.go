@@ -14,7 +14,8 @@ type homePageData struct {
 	Background string
 }
 
-//IndexHandler handles GET requests to the index
+//IndexHandler handles GET requests to the index.
+//It renders a template with a new background image each time
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("templates/index.html")
 	if err != nil {
@@ -23,13 +24,13 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Select random background
-	images, err := ioutil.ReadDir("./static/")
+	images, err := ioutil.ReadDir("./static/backgrounds")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	backgroundIndex := rand.Intn(len(images))
-	backgroundImagePath := "static/" + images[backgroundIndex].Name()
+	backgroundImagePath := "static/backgrounds/" + images[backgroundIndex].Name()
 
 	t.Execute(w, homePageData{Title: "Test", Background: backgroundImagePath})
 }

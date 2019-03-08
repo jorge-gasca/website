@@ -15,4 +15,5 @@
 .vscode/
 
 #Images
-static/*.JPG
+static/backgrounds/*
+static/gifs/*
