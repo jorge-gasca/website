@@ -31,17 +31,25 @@ jobs:
       env:
         GOPATH: /home/runner/work/website/go
     - name: Build
-      run: go build -v .
+      run: go build -v
+      env:
+        GOPATH: /home/runner/work/website/go
+    - uses: actions/upload-artifact@v1
+      with:
+        name: website
+        path: $GOPATH/bin/website
       env:
         GOPATH: /home/runner/work/website/go
 
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    needs: build
     steps:
 
-    - name: Checkout
-      uses: actions/checkout@master
+    - uses: actions/download-artifact@v1
+      with:
+        name: binary
 
     # Setup gcloud CLI
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -50,3 +58,4 @@ jobs:
         service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT }}
         service_account_key: ${{ secrets.GCP_AUTH }}
     - run: gcloud info
+    - run: ls -l
