@@ -31,15 +31,13 @@ jobs:
       env:
         GOPATH: /home/runner/work/website/go
     - name: Build
-      run: go build -v
+      run: go build -v .
       env:
         GOPATH: /home/runner/work/website/go
     - uses: actions/upload-artifact@v1
       with:
         name: website
-        path: $GOPATH/bin/website
-      env:
-        GOPATH: /home/runner/work/website/go
+        path: ./website
 
   deploy:
     name: Deploy
