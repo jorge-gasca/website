@@ -1,0 +1,59 @@
+name: Deploy to GCP
+
+on:
+  pull_request:
+    branches:
+    - master
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+      with:
+        path: go/src/website
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+      env:
+        GOPATH: /home/runner/work/website/go
+    - name: Build
+      run: go build -v .
+      env:
+        GOPATH: /home/runner/work/website/go
+    - uses: actions/upload-artifact@v1
+      with:
+        name: website
+        path: ./website
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+
+    - uses: actions/download-artifact@v1
+      with:
+        name: website
+
+    # Setup gcloud CLI
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '270.0.0'
+        service_account_email: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+        service_account_key: ${{ secrets.GCP_AUTH }}
+    - run: gcloud info
+    - run: ls -l
