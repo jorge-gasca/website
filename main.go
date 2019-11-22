@@ -34,9 +34,8 @@ func main() {
 		err := http.ListenAndServe(":http", certManager.HTTPHandler(nil))
 		if err != nil {
 			log.Fatal(err)
-			return
 		}
 	}()
-
+    // whats up
 	log.Fatal(server.ListenAndServeTLS("", ""))
 }
