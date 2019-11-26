@@ -36,6 +36,5 @@ func main() {
 			log.Fatal(err)
 		}
 	}()
-    // whats up
 	log.Fatal(server.ListenAndServeTLS("", ""))
 }
