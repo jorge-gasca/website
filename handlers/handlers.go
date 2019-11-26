@@ -32,5 +32,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	backgroundIndex := rand.Intn(len(images))
 	backgroundImagePath := "static/backgrounds/" + images[backgroundIndex].Name()
 
-	t.Execute(w, homePageData{Title: "Test", Background: backgroundImagePath})
+	err = t.Execute(w, homePageData{Title: "Test", Background: backgroundImagePath})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

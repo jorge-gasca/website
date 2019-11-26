@@ -29,8 +29,12 @@ func main() {
 	fs := http.FileServer(http.Dir("static/"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	//redirect HTTP
-	go http.ListenAndServe(":http", certManager.HTTPHandler(nil))
-
+	//redirect HTTP	
+	go func(){
+		err := http.ListenAndServe(":http", certManager.HTTPHandler(nil))
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 	log.Fatal(server.ListenAndServeTLS("", ""))
 }
